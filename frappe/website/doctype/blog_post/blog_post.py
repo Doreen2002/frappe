@@ -10,6 +10,7 @@ from frappe.website.render import clear_cache
 from frappe.utils import today, cint, global_date_format, get_fullname, strip_html_tags, markdown, sanitize_html
 from frappe.website.utils import (find_first_image, get_html_content_based_on_type,
 	get_comment_list)
+from html import unescape
 
 class BlogPost(WebsiteGenerator):
 	website = frappe._dict(
@@ -149,6 +150,7 @@ def get_blog_category(route):
 def get_blog_list(doctype, txt=None, filters=None, limit_start=0, limit_page_length=20, order_by=None):
 	conditions = []
 	category = filters.blog_category or sanitize_html(frappe.local.form_dict.blog_category or frappe.local.form_dict.category)
+	category =  frappe.utils.sanitize_html(unescape( category))
 	if filters:
 		if filters.blogger:
 			conditions.append('t1.blogger=%s' % frappe.db.escape(filters.blogger))
