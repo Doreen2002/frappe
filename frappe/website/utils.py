@@ -7,6 +7,7 @@ import frappe, re, os
 from six import iteritems
 from past.builtins import cmp
 from frappe.utils import md_to_html
+from html import unescape
 
 def delete_page_cache(path):
 	cache = frappe.cache()
@@ -334,7 +335,7 @@ def get_html_content_based_on_type(doc, fieldname, content_type):
 		'''
 		Set content based on content_type
 		'''
-		content = doc.get(fieldname)
+		content = frappe.utils.sanitize_html(unescape(doc.get(fieldname)))
 
 		if content_type == 'Markdown':
 			content = md_to_html(doc.get(fieldname + '_md'))
